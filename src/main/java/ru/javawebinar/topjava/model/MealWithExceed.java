@@ -11,10 +11,20 @@ public class MealWithExceed {
 
     private final boolean exceed;
 
+    private int id;
+
     public MealWithExceed(LocalDateTime dateTime, String description, int calories, boolean exceed) {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
+        this.exceed = exceed;
+    }
+
+    public MealWithExceed(Meal meal, boolean exceed) {
+        this.dateTime = meal.getDateTime();
+        this.description = meal.getDescription();
+        this.calories = meal.getCalories();
+        this.id = meal.getId();
         this.exceed = exceed;
     }
 
@@ -32,6 +42,10 @@ public class MealWithExceed {
 
     public boolean isExceed() {
         return exceed;
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override
