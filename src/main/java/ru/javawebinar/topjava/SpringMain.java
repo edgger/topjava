@@ -2,6 +2,7 @@ package ru.javawebinar.topjava;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.MealWithExceed;
@@ -19,8 +20,8 @@ public class SpringMain {
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
             adminUserController.create(new User(null, "userName", "email", "password", Role.ROLE_ADMIN));
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
-            mealRestController.create(new MealWithExceed(null, LocalDateTime.now(),"testdesc",500,false));
-            MealWithExceed mealWithExceed = mealRestController.create(new MealWithExceed(null, LocalDateTime.now(), "testdesc2", 1500, false));
+            mealRestController.create(new Meal(null, LocalDateTime.now(),"testdesc",500));
+            Meal meal = mealRestController.create(new Meal(null, LocalDateTime.now(), "testdesc2", 1500));
             System.out.println(mealRestController.getAll());
         }
     }

@@ -21,38 +21,67 @@ import java.util.List;
 public class MealRestController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private final MealService service;
+
     @Autowired
-    private MealService service;
+    public MealRestController(MealService service) {
+        this.service = service;
+    }
 
     public List<MealWithExceed> getAll() {
         log.info("getAll");
         return MealsUtil.getWithExceeded(service.getAll(AuthorizedUser.id()),AuthorizedUser.getCaloriesPerDay());
     }
 
-    public List<MealWithExceed> getFiltered(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
+    public List<MealWithExceed> getFiltered(String startDateParam, String startTimeParam, String endDateParam, String endTimeParam) {
         log.info("get filtered");
 
-        if (startDate==null) {startDate=LocalDate.MIN;}
-        if (startTime==null) {startTime=LocalTime.MIN;}
-        if (endDate==null) {endDate=LocalDate.MAX;}
-        if (endTime==null) {endTime=LocalTime.MAX;}
+        LocalDate startDate;
+        LocalTime startTime;
+        LocalDate endDate;
+        LocalTime endTime;
 
-        return MealsUtil.getWithExceeded(
+        if (startDateParam==null||startDateParam.length()==0) {
+            startDate=LocalDate.MIN;
+        } else {
+            startDate = LocalDate.parse(startDateParam);
+        }
+
+        if (startTimeParam==null||startTimeParam.length()==0) {
+            startTime=LocalTime.MIN;
+        } else {
+            startTime = LocalTime.parse(startTimeParam);
+        }
+
+        if (endDateParam==null||endDateParam.length()==0) {
+            endDate=LocalDate.MAX;
+        } else {
+            endDate=LocalDate.parse(endDateParam);
+        }
+
+        if (endTimeParam==null||endTimeParam.length()==0) {
+            endTime=LocalTime.MAX;
+        } else {
+            endTime=LocalTime.parse(endTimeParam);
+        }
+
+        return MealsUtil.getFilteredWithExceeded(
+                service.getAll(AuthorizedUser.id()),AuthorizedUser.getCaloriesPerDay()
+                ,startDate,startTime,endDate,endTime);
+
+        /*return MealsUtil.getWithExceeded(
                 service.getFiltered(AuthorizedUser.id(),startDate,startTime,endDate,endTime),
-                AuthorizedUser.getCaloriesPerDay());
+                AuthorizedUser.getCaloriesPerDay());*/
     }
 
-    public MealWithExceed get(int id) {
+    public Meal get(int id) {
         log.info("get {}", id);
-        return MealsUtil.getWithExceeded(service.getAll(AuthorizedUser.id()), AuthorizedUser.getCaloriesPerDay()).stream()
-                .filter(mealWithExceed -> mealWithExceed.getId() == id)
-                .findFirst()
-                .orElse(null);
+        return service.get(id,AuthorizedUser.id());
     }
 
-    public MealWithExceed create(MealWithExceed mealWithExceed) {
-        log.info("create {}", mealWithExceed);
-        Meal meal = new Meal(mealWithExceed.getDateTime(), mealWithExceed.getDescription(), mealWithExceed.getCalories());
+    public Meal create(Meal meal) {
+        log.info("create {}", meal);
+        ValidationUtil.checkNew(meal);
         Meal savedMeal = service.save(meal, AuthorizedUser.id());
         return get(savedMeal.getId());
     }
@@ -62,9 +91,8 @@ public class MealRestController {
         service.delete(id, AuthorizedUser.id());
     }
 
-    public void update(MealWithExceed mealWithExceed, int id) {
-        log.info("update {} with id={}", mealWithExceed, id);
-        Meal meal = new Meal(mealWithExceed.getId(), mealWithExceed.getDateTime(), mealWithExceed.getDescription(), mealWithExceed.getCalories());
+    public void update(Meal meal, int id) {
+        log.info("update {} with id={}", meal, id);
         ValidationUtil.assureIdConsistent(meal, id);
         service.save(meal, AuthorizedUser.id());
     }
