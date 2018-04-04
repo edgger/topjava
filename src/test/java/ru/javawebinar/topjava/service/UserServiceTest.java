@@ -27,9 +27,9 @@ import static ru.javawebinar.topjava.UserTestData.*;
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-db.xml"
 })
+@ActiveProfiles("hsqldb") //resolver = ActiveDbProfileResolver.class)
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 public class UserServiceTest {
 
     static {
