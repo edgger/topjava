@@ -26,7 +26,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public abstract class ServiceTest {
+public abstract class ServiceTesting {
     private static final Logger log = getLogger("result");
     private static StringBuilder results = new StringBuilder();
 

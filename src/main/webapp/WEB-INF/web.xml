@@ -3,6 +3,10 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
 		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+    <context-param>
+        <param-name>spring.profiles.active</param-name>
+        <param-value>postgres, datajpa</param-value>
+    </context-param>
 
     <display-name>Topjava</display-name>
 
@@ -25,5 +29,4 @@
         <servlet-name>mealServlet</servlet-name>
         <url-pattern>/meals</url-pattern>
     </servlet-mapping>
-
 </web-app>
