@@ -1,7 +1,9 @@
 package ru.javawebinar.topjava.web;
 
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.core.env.ConfigurableEnvironment;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -28,13 +30,14 @@ public class MealServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        System.setProperty("spring.profiles.active", "postgres, datajpa");
-        //springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
-        springContext = new GenericXmlApplicationContext("classpath:spring/spring-app.xml", "classpath:spring/spring-db.xml");
+        /*System.setProperty("spring.profiles.active", "postgres, datajpa");
+        springContext = new GenericXmlApplicationContext("classpath:spring/spring-app.xml", "classpath:spring/spring-db.xml");*/
 
-        /*ConfigurableEnvironment springEnvironment = springContext.getEnvironment();
-        springEnvironment.setActiveProfiles("postgres","datajpa");
-        springContext.refresh();*/
+        springContext = new ClassPathXmlApplicationContext();
+        ((ClassPathXmlApplicationContext) springContext).setConfigLocations("spring/spring-app.xml", "spring/spring-db.xml");
+        ConfigurableEnvironment springEnvironment = springContext.getEnvironment();
+        springEnvironment.setActiveProfiles("hsqldb","datajpa");
+        springContext.refresh();
 
         mealController = springContext.getBean(MealRestController.class);
     }

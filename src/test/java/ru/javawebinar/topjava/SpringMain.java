@@ -19,7 +19,7 @@ public class SpringMain {
 
     public static void main(String[] args) {
         //System.setProperty("spring.profiles.active", "hsqldb, jdbc");
-        
+
         // java 7 Automatic resource management
         //try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml","spring/mock.xml")) {
         try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml","spring/spring-db.xml")) {

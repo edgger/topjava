@@ -4,6 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.Month;
 
 import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.UserTestData.ADMIN;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
@@ -61,15 +63,15 @@ public abstract class MealServiceTesting extends ServiceTesting {
     }
 
     @Override
+    public void getAll() throws Exception {
+        assertMatch(service.getAll(USER_ID), MEALS);
+    }
+
+    @Test
     public void updateNotFound() throws Exception {
         thrown.expect(NotFoundException.class);
         thrown.expectMessage("Not found entity with id=" + MEAL1_ID);
         service.update(MEAL1, ADMIN_ID);
-    }
-
-    @Override
-    public void getAll() throws Exception {
-        assertMatch(service.getAll(USER_ID), MEALS);
     }
 
     @Test
@@ -77,5 +79,11 @@ public abstract class MealServiceTesting extends ServiceTesting {
         assertMatch(service.getBetweenDates(
                 LocalDate.of(2015, Month.MAY, 30),
                 LocalDate.of(2015, Month.MAY, 30), USER_ID), MEAL3, MEAL2, MEAL1);
+    }
+
+    @Test
+    public void getWithUser() throws Exception{
+        Meal actual = service.getWithUser(ADMIN_MEAL_ID, ADMIN_ID);
+        UserTestData.assertMatch(actual.getUser(),ADMIN);
     }
 }

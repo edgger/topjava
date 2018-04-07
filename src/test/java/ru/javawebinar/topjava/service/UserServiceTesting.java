@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
+import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -36,11 +37,6 @@ public abstract class UserServiceTesting extends ServiceTesting {
         assertMatch(service.getAll(), ADMIN, newUser, USER);
     }
 
-    @Test(expected = DataAccessException.class)
-    public void duplicateMailCreate() throws Exception {
-        service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass", Role.ROLE_USER));
-    }
-
     @Override
     public void delete() throws Exception {
         service.delete(USER_ID);
@@ -65,12 +61,6 @@ public abstract class UserServiceTesting extends ServiceTesting {
         service.get(1);
     }
 
-    @Test
-    public void getByEmail() throws Exception {
-        User user = service.getByEmail("user@yandex.ru");
-        assertMatch(user, USER);
-    }
-
     @Override
     public void update() throws Exception {
         User updated = new User(USER);
@@ -81,13 +71,25 @@ public abstract class UserServiceTesting extends ServiceTesting {
     }
 
     @Override
-    public void updateNotFound() throws Exception {
-
-    }
-
-    @Override
     public void getAll() throws Exception {
         List<User> all = service.getAll();
         assertMatch(all, ADMIN, USER);
+    }
+
+    @Test(expected = DataAccessException.class)
+    public void duplicateMailCreate() throws Exception {
+        service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass", Role.ROLE_USER));
+    }
+
+    @Test
+    public void getByEmail() throws Exception {
+        User user = service.getByEmail("user@yandex.ru");
+        assertMatch(user, USER);
+    }
+
+    @Test
+    public void getWithMeals() throws Exception {
+        User user = service.getWithMeals(ADMIN_ID);
+        MealTestData.assertMatch(user.getMeals(), MealTestData.ADMIN_MEAL1, MealTestData.ADMIN_MEAL2);
     }
 }

@@ -63,6 +63,7 @@ public abstract class ServiceTesting {
 
     @Test
     public abstract void create() throws Exception;
+
     @Test
     public abstract void get() throws Exception;
 
@@ -71,9 +72,6 @@ public abstract class ServiceTesting {
 
     @Test
     public abstract void update() throws Exception;
-
-    @Test
-    public abstract void updateNotFound() throws Exception;
 
     @Test
     public abstract void getAll() throws Exception;

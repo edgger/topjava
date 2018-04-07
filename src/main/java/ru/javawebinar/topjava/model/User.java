@@ -53,6 +53,11 @@ public class User extends AbstractNamedEntity {
     @Range(min = 10, max = 10000)
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
+    //TODO: O.7
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+    //@CollectionTable(name = "meals", joinColumns = @JoinColumn(name = "user_id"))
+    private List<Meal> meals;
+
     public User() {
     }
 
@@ -120,6 +125,14 @@ public class User extends AbstractNamedEntity {
 
     public void setRoles(Collection<Role> roles) {
         this.roles = CollectionUtils.isEmpty(roles) ? Collections.emptySet() : EnumSet.copyOf(roles);
+    }
+
+    public List<Meal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(Collection<Meal> meals) {
+        this.meals = CollectionUtils.isEmpty(meals) ? Collections.emptyList() : new ArrayList<Meal>(meals);
     }
 
     @Override
