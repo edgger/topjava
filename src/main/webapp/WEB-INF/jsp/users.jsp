@@ -4,9 +4,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
-<jsp:include page="fragments/headTag.jsp"/>
+<jsp:include page="./fragments/headTag.jsp"/>
 <body>
-<jsp:include page="fragments/bodyHeader.jsp"/>
+<jsp:include page="./fragments/bodyHeader.jsp"/>
 
 <section>
     <h3><spring:message code="user.title"/></h3>
@@ -34,6 +34,6 @@
         </c:forEach>
     </table>
 </section>
-<jsp:include page="fragments/footer.jsp"/>
+<jsp:include page="./fragments/footer.jsp"/>
 </body>
 </html>
