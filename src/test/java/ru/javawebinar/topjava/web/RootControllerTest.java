@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 import org.junit.Test;
+import ru.javawebinar.topjava.MealTestData;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,6 +24,22 @@ public class RootControllerTest extends AbstractControllerTest {
                         allOf(
                                 hasProperty("id", is(START_SEQ)),
                                 hasProperty("name", is(USER.getName()))
+                        )
+                )));
+    }
+
+    @Test
+    public void testMeals() throws Exception {
+        mockMvc.perform(get("/meals"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("meals"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
+                .andExpect(model().attribute("meals", hasSize(MealTestData.MEALS.size())))
+                .andExpect(model().attribute("meals", hasItem(
+                        allOf(
+                                hasProperty("id", is(MealTestData.MEAL1.getId())),
+                                hasProperty("description", is(MealTestData.MEAL1.getDescription()))
                         )
                 )));
     }
