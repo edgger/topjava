@@ -39,4 +39,24 @@ $(function () {
         ]
     });
     makeEditable();
+    $(".enableChange").click(function () {
+        var enabled = $(this).is(":checked");
+        var thisRow = $(this).closest("tr");
+        if (enabled) {
+            thisRow.removeClass("disabledUser");
+        } else {
+            thisRow.addClass("disabledUser");
+        }
+        changeEnabled(thisRow.attr("id"), enabled);
+    });
 });
+
+function changeEnabled(id, enabled) {
+    $.ajax({
+        url: ajaxUrl + id + "?enabled=" + enabled,
+        type: "PUT",
+        success: function () {
+            updateTable();
+        }
+    });
+}

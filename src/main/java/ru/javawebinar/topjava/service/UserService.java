@@ -18,6 +18,8 @@ public interface UserService {
 
     void update(User user);
 
+    void changeEnabled(int id, boolean enabled);
+
     List<User> getAll();
 
     User getWithMeals(int id);

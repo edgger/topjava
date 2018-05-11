@@ -12,24 +12,25 @@
 <section class="container">
     <h3><spring:message code="meal.title"/></h3>
 
-    <form method="post" action="meals/filter">
+    <form id="filterMeals">
         <dl>
             <dt><spring:message code="meal.startDate"/>:</dt>
-            <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
+            <dd><input type="date" id="startDate"></dd>
         </dl>
         <dl>
             <dt><spring:message code="meal.endDate"/>:</dt>
-            <dd><input type="date" name="endDate" value="${param.endDate}"></dd>
+            <dd><input type="date" id="endDate"></dd>
         </dl>
         <dl>
             <dt><spring:message code="meal.startTime"/>:</dt>
-            <dd><input type="time" name="startTime" value="${param.startTime}"></dd>
+            <dd><input type="time" id="startTime"></dd>
         </dl>
         <dl>
             <dt><spring:message code="meal.endTime"/>:</dt>
-            <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
+            <dd><input type="time" id="endTime"></dd>
         </dl>
-        <button type="submit"><spring:message code="meal.filter"/></button>
+        <button type="button" class="btn btn-primary" onclick="filterMeals()"><spring:message code="meal.filter"/></button>
+        <button type="button" class="btn btn-primary" onclick="resetFilterMeals()"><spring:message code="meal.filter"/> reset</button>
     </form>
     <hr>
     <button class="btn btn-primary" onclick="add()">
@@ -59,8 +60,8 @@
                     </td>
                     <td>${meal.description}</td>
                     <td>${meal.calories}</td>
-                    <td><a><spring:message code="common.update"/></a></td>
-                    <td><a class="delete"><spring:message code="common.delete"/></a></td>
+                    <td><button><spring:message code="common.update"/></button></td>
+                    <td><button class="delete"><spring:message code="common.delete"/></button></td>
                 </tr>
             </c:forEach>
         </table>
