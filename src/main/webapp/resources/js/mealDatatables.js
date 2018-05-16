@@ -14,6 +14,18 @@ function clearFilter() {
     $.get(ajaxUrl, updateTableByData);
 }
 
+$.ajaxSetup({
+    converters: {
+        "text json": function (stringData) {
+            var json = JSON.parse(stringData);
+            $(json).each(function () {
+                this.dateTime = this.dateTime.replace('T', ' ').substr(0, 16);
+            });
+            return json;
+        }
+    }
+});
+
 $(function () {
     datatableApi = $("#datatable").DataTable({
         "ajax": {
@@ -24,31 +36,13 @@ $(function () {
         "info": true,
         "columns": [
             {
-                "data": "dateTime",
-                "render": function (date, type, row) {
-                    if (type === "display") {
-                        return date.replace("T"," ");
-                    }
-                    return date;
-                }
+                "data": "dateTime"
             },
             {
-                "data": "description",
-                "render": function (data, type, row) {
-                    if (type === "display") {
-                        return data;
-                    }
-                    return data;
-                }
+                "data": "description"
             },
             {
-                "data": "calories",
-                "render": function (data, type, row) {
-                    if (type === "display") {
-                        return data;
-                    }
-                    return data;
-                }
+                "data": "calories"
             },
             {
                 "defaultContent": "Edit",
@@ -71,5 +65,16 @@ $(function () {
             $(row).attr("data-mealExceed", data.exceed);
         },
         "initComplete": makeEditable
+    });
+    $('#startDate, #endDate').datetimepicker({
+        timepicker: false,
+        format: 'Y-m-d'
+    });
+    $('#startTime, #endTime').datetimepicker({
+        datepicker: false,
+        format: 'H:i'
+    });
+    $('#dateTime').datetimepicker({
+        format: 'Y-m-d H:i'
     });
 });
