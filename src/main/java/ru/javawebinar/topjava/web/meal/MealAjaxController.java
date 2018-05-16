@@ -1,13 +1,18 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
+import ru.javawebinar.topjava.util.ValidationUtil;
+import ru.javawebinar.topjava.web.converter.MyCustomNumberEditor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -15,10 +20,22 @@ import java.util.List;
 @RequestMapping(value = "/ajax/profile/meals")
 public class MealAjaxController extends AbstractMealController {
 
+    /*https://stackoverflow.com/questions/14976566/spring-initbinder-bind-empty-or-null-values-of-a-float-field-as-0*/
+    @InitBinder
+    public void registerCustomerBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(int.class, new MyCustomNumberEditor(Integer.class));
+    }
+
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MealWithExceed> getAll() {
         return super.getAll();
+    }
+
+    @Override
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Meal get(@PathVariable("id") int id) {
+        return super.get(id);
     }
 
     @Override
@@ -28,14 +45,16 @@ public class MealAjaxController extends AbstractMealController {
     }
 
     @PostMapping
-    public void createOrUpdate(@RequestParam("id") Integer id,
-                               @RequestParam("dateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
-                               @RequestParam("description") String description,
-                               @RequestParam("calories") int calories) {
-        Meal meal = new Meal(id, dateTime, description, calories);
+    public ResponseEntity<String> createOrUpdate(@Validated(Meal.ValidationMVC.class) Meal meal, BindingResult result) {
+        if (result.hasErrors()) {
+            return ValidationUtil.bindingErrorConstruct(result);
+        }
         if (meal.isNew()) {
             super.create(meal);
+        } else {
+            super.update(meal, meal.getId());
         }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
