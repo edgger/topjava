@@ -18,7 +18,7 @@
 
         <tomcat.version>8.5.29</tomcat.version>
         <spring.version>5.0.4.RELEASE</spring.version>
-        <spring-data-jpa.version>2.0.5.RELEASE</spring-data-jpa.version>
+        <spring-data-jpa.version>2.1.0.RELEASE</spring-data-jpa.version>
         <jackson-json.version>2.9.5</jackson-json.version>
 
         <!-- Logging -->
